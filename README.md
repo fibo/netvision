@@ -15,14 +15,38 @@ apt-get install -y libgd-perl nginx git
 Create user
 
 ```
-export USER=myuser
-adduser $USER
+export MYUSER=myuser
+adduser $MYUSER
 ```
 
 Create public folder
 
 ```
 mkdir /www
-chown $USER /www
+chown $MYUSER /www
 ```
 
+Configure public folder
+
+```
+cat <<EOF > /etc/nginx/ipv4-space.conf
+server {
+   root /www;
+   location / {
+
+   }
+}
+EOF
+```
+Get the code
+
+```
+sudo su - $MYUSER
+git clone https://github.com/fibo/netvision.git
+```
+
+Init crontab
+
+```
+# TODO
+```
