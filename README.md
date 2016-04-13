@@ -5,7 +5,7 @@
 ## Example
 
 ```
-pingClassB.pl 1.1
+generatePNG.pl 1.2.3
 ```
 
 ## Setup
@@ -18,19 +18,10 @@ Install required software
 apt-get install -y libgd-perl nginx git
 ```
 
-Create user
-
-```
-export MYUSER=myuser
-adduser $MYUSER
-```
-
 Create public folder
 
 ```
 export IPV4SPACE_PUBLIC_DIR=/www
-seq 0 255 | while read A; do seq -w 0 255 | while read B; do echo mkdir -p $PUBLIC_DIR/images/$A/$B; done; done
-chown -R $MYUSER /www
 ```
 
 Configure public folder
@@ -51,7 +42,7 @@ EOF
 Get the code
 
 ```
-sudo su - $MYUSER
+cd
 git clone https://github.com/fibo/netvision.git
 ```
 

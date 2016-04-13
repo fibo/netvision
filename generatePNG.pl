@@ -15,7 +15,7 @@ my $timeout = 1;
 
 sub Main {
     &checkSubNet;
-    #&scan;
+    &scan;
     &render;
 }
 
@@ -42,8 +42,6 @@ sub render {
       my $y = ($d - $x)/16;
             my $ip = $net . "." . $d;
 
-            print "$x,$y\t$ip\n";
-
                if ( $nv{$ip} ) {
                 $im->setPixel( $x, $y, $red );
             }
@@ -69,12 +67,11 @@ sub render {
 }
 
 sub scan {
-    my $p = Net::Ping->new( "tcp", $timeout );
+    my $p = Net::Ping->new( 'icmp', $timeout );
     for my $host (&getTargetHosts) {
-        print "$host\n";
         if ( $p->ping($host) ) {
             $nv{$host} = 1;
-            print "\n$host is alive\n";
+            #print "\n$host is alive\n";
         }
         else {
             $nv{$host} = 0;
