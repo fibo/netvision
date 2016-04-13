@@ -4,8 +4,26 @@
 
 ## Example
 
+It is required to run as root, cause the `icmp` mode of [Net::Ping](https://metacpan.org/pod/Net::Ping) requires it
+and also to have maximum priority when generating the images.
+
+Run a single class C subnet ping, generates a 1.2.3.png
+
 ```
 generatePNG.pl 1.2.3
+```
+
+Generate /www/images/1/2/3/1.2.3.png
+
+```
+export IPV4SPACE_PUBLIC_DIR=/www
+generatePNG.pl 1.2.3
+```
+
+Run the **BOMB**, ping all IPv4 space
+
+```
+seq 1 254 | while read A; do seq 1 254 | while read B; do seq 1 254 | while read C; do ./generatePNG.pl $A.$B.$C & done; done; done &
 ```
 
 ## Setup
