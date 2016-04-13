@@ -2,6 +2,12 @@
 
 > IPv4 space data visualization
 
+## Example
+
+```
+pingClassB.pl 1.1
+```
+
 ## Setup
 
 Create an Ubuntu 14 server, then run as root
@@ -22,8 +28,9 @@ adduser $MYUSER
 Create public folder
 
 ```
-mkdir /www
-chown $MYUSER /www
+export PUBLIC_DIR=/www
+seq 0 255 | while read A; do seq -w 0 255 | while read B; do echo mkdir -p $PUBLIC_DIR/images/$A/$B; done; done
+chown -R $MYUSER /www
 ```
 
 Configure public folder
@@ -31,13 +38,16 @@ Configure public folder
 ```
 cat <<EOF > /etc/nginx/ipv4-space.conf
 server {
-   root /www;
-   location / {
-
-   }
+    listen 80;
+    server_name www.ip-v4.space;
+    root $PUBLIC_DIR/;
+    location /images {
+        autoindex on;
+    }
 }
 EOF
 ```
+
 Get the code
 
 ```
