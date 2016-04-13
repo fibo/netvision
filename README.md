@@ -28,7 +28,7 @@ adduser $MYUSER
 Create public folder
 
 ```
-export PUBLIC_DIR=/www
+export IPV4SPACE_PUBLIC_DIR=/www
 seq 0 255 | while read A; do seq -w 0 255 | while read B; do echo mkdir -p $PUBLIC_DIR/images/$A/$B; done; done
 chown -R $MYUSER /www
 ```
@@ -40,7 +40,7 @@ cat <<EOF > /etc/nginx/ipv4-space.conf
 server {
     listen 80;
     server_name www.ip-v4.space;
-    root $PUBLIC_DIR/;
+    root $IPV4SPACE_PUBLIC_DIR/;
     location /images {
         autoindex on;
     }

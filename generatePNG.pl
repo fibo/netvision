@@ -1,7 +1,9 @@
 #!/usr/bin/perl
+use v5.12;
 use strict;
 use warnings;
 
+use File::Path 'make_path';
 use Net::Ping;
 use GD;
 
@@ -13,16 +15,17 @@ my $timeout = 1;
 
 sub Main {
     &checkSubNet;
-    &scan;
+    #&scan;
     &render;
 }
 
 sub checkSubNet {
-    $net =~ /^\d{1,3}\.\d{1,3}$/ or die "aaaaaaarrrrrrrrghhhhhhhh  ( asd )";
+    $net =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}$/
+      or die "aaaaaaarrrrrrrrghhhhhhhh  ( asd )";
 }
 
 sub render {
-    my $im = new GD::Image( 256, 256 );
+    my $im = new GD::Image( 16, 16 );
 
     # allocate some colors
     my $white = $im->colorAllocate( 255, 255, 255 );
@@ -34,23 +37,33 @@ sub render {
     $im->transparent($white);
     $im->interlaced('true');
 
-    for my $x ( 0 .. 255 ) {
-        for my $y ( 0 .. 255 ) {
-            my $ip = $net . "." . $x . "." . $y;
+    for my $d ( 0 .. 255 ) {
+      my $x = $d % 16;
+      my $y = ($d - $x)/16;
+            my $ip = $net . "." . $d;
 
-            if ( $nv{$ip} ) {
+            print "$x,$y\t$ip\n";
+
+               if ( $nv{$ip} ) {
                 $im->setPixel( $x, $y, $red );
             }
             else {
                 $im->setPixel( $x, $y, $white );
             }
         }
-    }
 
     # make sure we are writing to a binary stream
     binmode STDOUT;
 
-    open OUT, "> $net.png";
+    my $target_dir='.';
+    my $IPV4SPACE_PUBLIC_DIR=$ENV{IPV4SPACE_PUBLIC_DIR};
+    if(defined($IPV4SPACE_PUBLIC_DIR)){
+      my $sub_dirs=$net;
+      $sub_dirs=~s!\.!/!g;
+      $target_dir="$IPV4SPACE_PUBLIC_DIR/$sub_dirs";
+      make_path $target_dir;
+    }
+    open OUT, "> $target_dir/$net.png";
     print OUT $im->png;
     close OUT;
 }
@@ -58,7 +71,7 @@ sub render {
 sub scan {
     my $p = Net::Ping->new( "tcp", $timeout );
     for my $host (&getTargetHosts) {
-        print ".";
+        print "$host\n";
         if ( $p->ping($host) ) {
             $nv{$host} = 1;
             print "\n$host is alive\n";
@@ -72,10 +85,8 @@ sub scan {
 
 sub getTargetHosts {
     my @out;
-    for my $c ( 0 .. 255 ) {
-        for my $d ( 0 .. 255 ) {
-            push @out, $net . "." . $c . "." . $d;
-        }
+    for my $d ( 0 .. 255 ) {
+        push @out, $net . "." . $d;
     }
     return @out;
 }
