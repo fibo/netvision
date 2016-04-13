@@ -18,7 +18,7 @@ sub Main {
 }
 
 sub checkSubNet {
-    $net =~ /\d{1,3}\.\d{1,3}/ or die "aaaaaaarrrrrrrrghhhhhhhh  ( asd )";
+    $net =~ /^\d{1,3}\.\d{1,3}$/ or die "aaaaaaarrrrrrrrghhhhhhhh  ( asd )";
 }
 
 sub render {
