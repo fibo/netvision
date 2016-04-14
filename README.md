@@ -13,17 +13,20 @@ Run a single class C subnet ping, generates a 1.2.3.png
 generatePNG.pl 1.2.3
 ```
 
-Generate /www/images/1/2/3/1.2.3.png
+Run the **BOMB**, ping a whole IPv4 class C subnet, for instance `10.20.*`
 
 ```
-export IPV4SPACE_PUBLIC_DIR=/www
-generatePNG.pl 1.2.3
+export A=10
+export B=20
+seq 0 255 | while read C; do echo $A $B $C; ./generatePNG.pl $A.$B.$C & done &
 ```
 
-Run the **BOMB**, ping all IPv4 space
+Upload to S3
 
 ```
-seq 1 254 | while read A; do seq 1 254 | while read B; do seq 1 254 | while read C; do ./generatePNG.pl $A.$B.$C & done; done; done &
+export AWS_ACCESS_KEY_ID=XXX
+export AWS_SECRET_ACCESS_KEY=YYY123
+aws s3 cp 10.20.30.png s3://ip-v4.space/10/20/
 ```
 
 ## Setup
@@ -33,28 +36,7 @@ Create an Ubuntu 14 server, then run as root
 Install required software
 
 ```
-apt-get install -y libgd-perl nginx git
-```
-
-Create public folder
-
-```
-export IPV4SPACE_PUBLIC_DIR=/www
-```
-
-Configure public folder
-
-```
-cat <<EOF > /etc/nginx/ipv4-space.conf
-server {
-    listen 80;
-    server_name www.ip-v4.space;
-    root $IPV4SPACE_PUBLIC_DIR/;
-    location /images {
-        autoindex on;
-    }
-}
-EOF
+apt-get install -y libgd-perl git
 ```
 
 Get the code
@@ -64,8 +46,3 @@ cd
 git clone https://github.com/fibo/netvision.git
 ```
 
-Init crontab
-
-```
-# TODO
-```
