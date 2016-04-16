@@ -63,4 +63,9 @@ cd
 git clone https://github.com/fibo/netvision.git
 ```
 
+## References
+
+* [IPv4 subnetting reference][IPv4_subnets]
+
+[IPv4_subnets]: https://en.wikipedia.org/wiki/IPv4_subnetting_reference
 [Perl_Net_Ping]: https://metacpan.org/pod/Net::Ping
