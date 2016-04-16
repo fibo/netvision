@@ -6,10 +6,29 @@ use v5.12;
 use English;
 use Net::Ping;
 
+use dataDir;
+use jsonFile;
+
 $OUTPUT_AUTOFLUSH = 1;
 
 my $timeout = 1;
 my $verbose = $ENV{VERBOSE};
+
+sub generateDataFileFor {
+    my $subnet = shift;
+
+    my $json_filepath = &jsonFile::forClassC($subnet);
+
+    my $data_dir = &dataDir::forClassC($subnet);
+
+    &dataDir::create($data_dir);
+
+    my $ping_response = &ping($subnet);
+
+    my $subnet_data = { subnet => $subnet, ping => $ping_response };
+
+    jsonFile::write($json_filepath, $subnet_data);
+}
 
 sub parse {
     my $subnet = shift;
@@ -24,8 +43,10 @@ sub parse {
     return ($a, $b, $c);
 }
 
-sub ping () {
+sub ping {
     my $subnet = shift;
+
+    my $start = time;
 
     my @response;
 
@@ -35,8 +56,9 @@ sub ping () {
 
     my @addresses;
 
+    # Skip 0 and 255 addresses.
     for my $d ( 1 .. 254 ) {
-        push @addresses, $subnet . "." . $d;
+        push @addresses, "$subnet.$d";
     }
 
     for my $address (@addresses) {
@@ -53,6 +75,12 @@ sub ping () {
     }
 
     $p->close();
+
+    my $end = time;
+
+    my $sec = $end - $start;
+
+    print "\nSubnet $subnet ping in $sec seconds.\n" if $verbose;
 
     return \@response
 }
