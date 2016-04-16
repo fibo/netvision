@@ -50,6 +50,8 @@ seq 1 254 | while read B; do ./generate_classB_JSON.pl $A.$B & done &
 
 ## Setup
 
+### Server
+
 On an Ubuntu 14 server, install required software
 
 ```bash
@@ -63,9 +65,14 @@ cd
 git clone https://github.com/fibo/netvision.git
 ```
 
+### S3
+
+See how to make an [S3 bucket public by default][S3_public].
+
 ## References
 
 * [IPv4 subnetting reference][IPv4_subnets]
 
 [IPv4_subnets]: https://en.wikipedia.org/wiki/IPv4_subnetting_reference
 [Perl_Net_Ping]: https://metacpan.org/pod/Net::Ping
+[S3_public]: http://g14n.info/2016/04/s3-bucket-public-by-default/
