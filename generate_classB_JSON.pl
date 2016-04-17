@@ -19,24 +19,18 @@ my @classC_subnets;
 
 # Skip 0 and 255 addresses.
 for my $c ( 1 .. 254 ) {
-  push @classC_subnets, $classB_subnet . ".$c";
+    push @classC_subnets, $classB_subnet . ".$c";
 }
 
 for my $subnet (@classC_subnets) {
-  my $json_filepath = &jsonFile::forClassC($subnet);
+    my $json_filepath = &jsonFile::forClassC($subnet);
 
-  my $json_file_exists = -e $json_filepath;
+    my $json_file_does_not_exist = not -e $json_filepath;
 
-  if ($json_file_exists) {
-      say $json_filepath;
-  } else {
-      classC::generateDataFileFor($subnet);
-  }
+    # Check if class C data file already exists, otherwise create it.
+    if ($json_file_does_not_exist) {
+        &classC::generateDataFileFor($subnet);
+    }
+
+    # TODO open all json files and aggregate them
 }
-
-__END__
-my $ping_response = &classC::ping($subnet);
-
-my $subnet_data = { subnet => $subnet, ping => $ping_response };
-
-jsonFile::write($json_filepath, $subnet_data);

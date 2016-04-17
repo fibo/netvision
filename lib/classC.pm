@@ -13,6 +13,8 @@ $OUTPUT_AUTOFLUSH = 1;
 
 my $timeout = 1;
 my $verbose = $ENV{VERBOSE};
+my $timing  = $ENV{TIMING};
+$timing = 1 if $verbose;
 
 sub generateDataFileFor {
     my $subnet = shift;
@@ -27,7 +29,7 @@ sub generateDataFileFor {
 
     my $subnet_data = { subnet => $subnet, ping => $ping_response };
 
-    jsonFile::write($json_filepath, $subnet_data);
+    jsonFile::write( $json_filepath, $subnet_data );
 }
 
 sub parse {
@@ -40,7 +42,7 @@ sub parse {
     my $b = $2;
     my $c = $3;
 
-    return ($a, $b, $c);
+    return ( $a, $b, $c );
 }
 
 sub ping {
@@ -52,7 +54,7 @@ sub ping {
 
     my $p = Net::Ping->new( 'icmp', $timeout );
 
-    print "icmp ping of subnet $subnet.* with $timeout sec. timeout\n" if $verbose;
+    say "ICMP ping of subnet $subnet.* with $timeout sec. timeout" if $verbose;
 
     my @addresses;
 
@@ -65,12 +67,10 @@ sub ping {
         if ( $p->ping($address) ) {
             push @response, 1;
 
-            print "\n$address is alive" if $verbose;
+            say "Address $address is alive" if $verbose;
         }
         else {
             push @response, 0;
-
-            print '.' if $verbose;
         }
     }
 
@@ -80,9 +80,9 @@ sub ping {
 
     my $sec = $end - $start;
 
-    print "\nSubnet $subnet ping in $sec seconds.\n" if $verbose;
+    say "Subnet $subnet ping in $sec seconds." if $timing;
 
-    return \@response
+    return \@response;
 }
 
 1;

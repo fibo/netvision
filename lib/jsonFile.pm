@@ -28,11 +28,11 @@ sub forClassC {
 }
 
 sub write {
-    my ($target_file, $subnet_data) = @_;
+    my ( $target_file, $subnet_data ) = @_;
 
     binmode STDOUT, ':utf8';
     open my $fh, '>', $target_file;
-    print $fh encode_json( $subnet_data );
+    print $fh encode_json($subnet_data);
     close $fh;
 }
 

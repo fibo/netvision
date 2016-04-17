@@ -19,7 +19,7 @@ sub forClassB {
 sub forClassC {
     my $subnet = shift;
 
-    my ($a, $b) = &classC::parse($subnet);
+    my ( $a, $b ) = &classC::parse($subnet);
 
     return "data/$a/$b";
 }
@@ -29,8 +29,8 @@ sub create {
 
     my $subdir_does_not_exists = not -d $subdir;
 
-    if ( $subdir_does_not_exists ) {
-      make_path $subdir or die "Cannot create dir $subdir";
+    if ($subdir_does_not_exists) {
+        make_path $subdir or die "Cannot create dir $subdir";
     }
 }
 

@@ -24,7 +24,7 @@ sub parse {
     my $a = $1;
     my $b = $2;
 
-    return ($a, $b);
+    return ( $a, $b );
 }
 
 1;
