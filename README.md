@@ -86,6 +86,15 @@ git clone https://github.com/fibo/netvision.git
 
 See how to make an [S3 bucket public by default][S3_public].
 
+## Data structure
+
+### Class C
+
+* subnet: `{String}` e.g. *10.20.30*.
+* ping: can be
+  * `{Array}` with lentght 254, filled with 1 or 0 according if host is alive or not.
+  * `{Number}` 0 if no host alive was found.
+
 ## References
 
 * [IPv4 subnetting reference][IPv4_subnets]
