@@ -13,6 +13,8 @@ my $classB_subnet = $ARGV[0];
 
 my $data_dir = &dataDir::forClassB($classB_subnet);
 
+my @aggregated_json_data;
+
 &dataDir::create($data_dir);
 
 my @classC_subnets;
@@ -32,5 +34,17 @@ for my $subnet (@classC_subnets) {
         &classC::generateDataFileFor($subnet);
     }
 
-    # TODO open all json files and aggregate them
+    my $subnet_data = jsonFile::read($json_filepath);
+
+    push @aggregated_json_data, $subnet_data;
 }
+
+my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
+&jsonFile::write($aggregated_json_file, \@aggregated_json_data);
+
+# Create a tarbal witth all JSON files.
+`tar czf ${aggregated_json_file}.tar.gz ${data_dir}`;
+
+# Upload files to S3.
+`aws s3 cp ${aggregated_json_file} s3://ip-v4.space/$aggregated_json_file`
+`aws s3 cp ${aggregated_json_file}.tar.gz s3://ip-v4.space/${aggregated_json_file}.tar.gz`

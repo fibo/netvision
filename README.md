@@ -4,8 +4,9 @@
 
 ## Usage
 
-The *generate_16x16_PNG.pl* script must be laucnhed by **root**, as required by
-the [Net::Ping][Perl_Net_Ping] `icmp` mode.
+The scripts must be laucnhed by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
+
+### Class C
 
 Run a single class C subnet ping, generates file *data/1/2/1.2.3.json*
 
@@ -41,6 +42,16 @@ Of course the *perl* interpreter should finish its job in no more than 5 minutes
 Execution time is faster when all hosts respond to ping. For instance, pinging
 `172.217.1.*` takes 10 seconds.
 
+### Class B
+
+Set you environment to enable upload to S3
+
+```bash
+export AWS_ACCESS_KEY_ID=***
+export AWS_SECRET_ACCESS_KEY=***
+export AWS_DEFAULT_REGION=us-east-1
+```
+
 Ping an IPc4 class B subnet. See [how to use GNU screen][screen_how_to] rather
 than crontab, nohup or other techniques.
 
@@ -48,21 +59,17 @@ than crontab, nohup or other techniques.
 ./generate_classB_JSON.pl 1.2
 ```
 
+It will generate files *data/1/1.2.json* and *data/1/1.2.json.tar.gz* and
+upload them to S3 bucket **s3://ip-v4.space**.
+
+### Class A
+
 Ping a whole IPv4 class A subnet, for instance `10.*`
 
 ```bash
 export A=10
 export TIMING=1
 seq 1 254 | while read B; do ./generate_classB_JSON.pl $A.$B & done &
-```
-
-Upload to S3
-
-```bash
-export AWS_ACCESS_KEY_ID=***
-export AWS_SECRET_ACCESS_KEY=***
-export AWS_DEFAULT_REGION=us-east-1
-aws s3 sync data/ s3://ip-v4.space/data/
 ```
 
 ## Setup

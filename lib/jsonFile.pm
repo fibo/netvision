@@ -27,6 +27,18 @@ sub forClassC {
     return $json_filepath;
 }
 
+sub read {
+    my ( $target_file ) = @_;
+
+    open my $fh, '<:encoding(UTF-8)', $target_file;
+    local $/;
+
+    my $subnet_data = decode_json(<$fh>);
+    close $fh;
+
+    return $subnet_data;
+}
+
 sub write {
     my ( $target_file, $subnet_data ) = @_;
 

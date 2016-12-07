@@ -64,6 +64,7 @@ sub ping {
     }
 
     my $no_alive_host_found = 1;
+    my $all_hosts_are_alive = 1;
 
     for my $address (@addresses) {
         if ( $p->ping($address) ) {
@@ -74,6 +75,7 @@ sub ping {
             say "Address $address is alive" if $verbose;
         }
         else {
+            $all_hosts_are_alive = 0;
             push @response, 0;
         }
     }
@@ -87,6 +89,8 @@ sub ping {
     say "Subnet $subnet pinged in $sec seconds." if $timing;
 
     return 0 if $no_alive_host_found;
+
+    return 1 if $all_hosts_are_alive;
 
     return \@response;
 }
