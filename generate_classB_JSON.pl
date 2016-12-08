@@ -10,7 +10,8 @@ use dataDir;
 use jsonFile;
 
 # Check that aws cli environment variable are defined.
-$ENV{AWS_DEFAULT_REGION} eq 'us-east-1'
+defined $ENV{AWS_DEFAULT_REGION}
+  and $ENV{AWS_DEFAULT_REGION} eq 'us-east-1'
   and defined $ENV{AWS_SECRET_ACCESS_KEY}
   and defined $ENV{AWS_ACCESS_KEY_ID}
   or die "aws cli environment variables not defined\n";
