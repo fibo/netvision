@@ -100,7 +100,7 @@ See how to make an [S3 bucket public by default][S3_public].
 * subnet: `{String}` e.g. *10.20.30*.
 * ping: can be
   * `{Array}` with lentght 254, filled with 1 or 0 according if host is alive or not.
-  * `{Number}` 0 if no host alive was found.
+  * `{Number}` 0 if no host alive was found, 1 if all hosts were alive.
 
 ## References
 
