@@ -46,5 +46,5 @@ my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
 `tar czf ${aggregated_json_file}.tar.gz ${data_dir}`;
 
 # Upload files to S3.
-`aws s3 cp ${aggregated_json_file} s3://ip-v4.space/$aggregated_json_file`
-`aws s3 cp ${aggregated_json_file}.tar.gz s3://ip-v4.space/${aggregated_json_file}.tar.gz`
+`aws s3 cp ${aggregated_json_file} s3://ip-v4.space/$aggregated_json_file`;
+`aws s3 cp ${aggregated_json_file}.tar.gz s3://ip-v4.space/${aggregated_json_file}.tar.gz`;
