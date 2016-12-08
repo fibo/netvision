@@ -88,10 +88,13 @@ sub ping {
 
     say "Subnet $subnet pinged in $sec seconds." if $timing;
 
+    # Return a single 0 if no alive host was found.
     return 0 if $no_alive_host_found;
 
+    # Return a single 1 if all hosts was found alive.
     return 1 if $all_hosts_are_alive;
 
+    # Otherwise return the response array, will require more disc space.
     return \@response;
 }
 

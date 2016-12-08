@@ -42,9 +42,5 @@ for my $subnet (@classC_subnets) {
 my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
 &jsonFile::write($aggregated_json_file, \@aggregated_json_data);
 
-# Create a tarbal witth all JSON files.
-`tar czf ${aggregated_json_file}.tar.gz ${data_dir}`;
-
-# Upload files to S3.
+# Upload file to S3.
 `aws s3 cp ${aggregated_json_file} s3://ip-v4.space/$aggregated_json_file`;
-`aws s3 cp ${aggregated_json_file}.tar.gz s3://ip-v4.space/${aggregated_json_file}.tar.gz`;
