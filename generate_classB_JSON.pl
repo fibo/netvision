@@ -23,11 +23,11 @@ my $data_dir = &dataDir::forClassB($classB_subnet);
 
 my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
 
-# Exit if class B data file already exists, it is our file watcher.
-# TODO should check with command
-#     aws s3 ls s3://ip-v4.space/$aggregated_json_file
-if ( -e $aggregated_json_file ) {
-    die "File $aggregated_json_file already exists\n";
+# Exit if class B data file already exists on S3.
+my $aggregated_json_file_exists = `aws s3 ls s3://ip-v4.space/$aggregated_json_file_exists`;
+
+if ( $aggregated_json_file_exists ) {
+    die "File s3://ip-v4.space/$aggregated_json_file already exists\n";
 }
 
 my @aggregated_json_data;
