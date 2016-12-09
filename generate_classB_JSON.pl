@@ -19,10 +19,18 @@ defined $ENV{AWS_DEFAULT_REGION}
 my $classB_subnet = $ARGV[0];
 
 my $data_dir = &dataDir::forClassB($classB_subnet);
+&dataDir::create($data_dir);
+
+my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
+
+# Exit if class B data file already exists, it is our file watcher.
+# TODO should check with command
+#     aws s3 ls s3://ip-v4.space/$aggregated_json_file
+if ( -e $aggregated_json_file ) {
+    die "File $aggregated_json_file already exists\n";
+}
 
 my @aggregated_json_data;
-
-&dataDir::create($data_dir);
 
 my @classC_subnets;
 
@@ -46,8 +54,7 @@ for my $subnet (@classC_subnets) {
     push @aggregated_json_data, $subnet_data;
 }
 
-my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
-&jsonFile::write($aggregated_json_file, \@aggregated_json_data);
+&jsonFile::write( $aggregated_json_file, \@aggregated_json_data );
 
 # Upload file to S3.
 `aws s3 cp ${aggregated_json_file} s3://ip-v4.space/$aggregated_json_file`;
