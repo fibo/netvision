@@ -69,7 +69,7 @@ Ping a whole IPv4 class A subnet, for instance `10.*`
 ```bash
 export A=10
 export TIMING=1
-seq 1 254 | while read B; do ./generate_classB_JSON.pl $A.$B & done &
+seq 1 255 | while read B; do ./generate_classB_JSON.pl $A.$B & done &
 ```
 
 ## Setup
