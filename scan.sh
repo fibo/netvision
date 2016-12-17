@@ -9,6 +9,6 @@ function scan () {
 	# an error.
 	mkdir -p data/$A
 
-	seq 1 255 | while read B; do echo ./generate_classB_JSON.pl $A.$B & done
+	seq 1 255 | while read B; do ./generate_classB_JSON.pl $A.$B & done
 }
 
