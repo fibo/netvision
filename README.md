@@ -99,7 +99,7 @@ For instance, connect to first worker via ssh. Then open a *screen* session
 and launch first worker script.
 
 ```bash
-nohup sh worker1.sh &
+nohup ./worker1.sh &
 ```
 
 ## Setup
