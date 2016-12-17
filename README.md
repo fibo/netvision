@@ -91,7 +91,7 @@ scan 16
 
 ### The Internet
 
-In order to scan the whole IPv4 space with cheap resources in aproximately one month
+In order to scan the whole IPv4 space with cheap resources in aproximately 45 days
 I distributed the job on 4 server workers, each has its own *workerN.sh*
 batch script.
 
