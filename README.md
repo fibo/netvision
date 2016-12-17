@@ -2,6 +2,31 @@
 
 > IPv4 space data visualization
 
+* [Usage](#usage)
+  * [Class C](#class-c)
+  * [Class B](#class-b)
+  * [Class A](#class-a)
+  * [The Internet](#the-internet)
+* [Setup](#setup)
+  * [Server](#server)
+  * [S3](#s3)
+* [Data structure](#data-structure)
+* [References](#references)
+
+Every website you visit is associated to at least one IP address.
+
+The IPv4 space is composed aproximately by 256*256*256*256 addresses, some of them are private or reserved.
+
+IPv4 addresses will be replaced gradually with IPv6 addresses.
+IPv6 was introduced in 2004 on [Root nameservers][Root_nameservers]
+but only in 2008 [ICANN] started to use it. In 2011 the [IANA] assigned
+the last IPv4 blocks and the protocol will be used until 2025.
+
+Scanning the whole IPv4 space is not that easy, but IPv6 will be huge and
+out of the scope of this project. Furthermore, the shape of IPv4 is more
+attractive in my opinion, it is easier to explain and with some effort
+could be printed.
+
 ## Usage
 
 The scripts must be laucnhed by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
@@ -44,14 +69,6 @@ Execution time is faster when all hosts respond to ping. For instance, pinging
 
 ### Class B
 
-Set you environment to enable upload to S3
-
-```bash
-export AWS_ACCESS_KEY_ID=***
-export AWS_SECRET_ACCESS_KEY=***
-export AWS_DEFAULT_REGION=us-east-1
-```
-
 Ping an IPc4 class B subnet. See [how to use GNU screen][screen_how_to] rather
 than crontab, nohup or other techniques.
 
@@ -64,12 +81,25 @@ upload them to S3 bucket **s3://ip-v4.space**.
 
 ### Class A
 
-Ping a whole IPv4 class A subnet, for instance `10.*`
+Ping a whole IPv4 class A subnet, for instance `16.*`
 
 ```bash
-export A=10
 export TIMING=1
-seq 1 255 | while read B; do ./generate_classB_JSON.pl $A.$B & done &
+source ./scan.sh
+scan 16
+```
+
+### The Internet
+
+In order to scan the whole IPv4 space with cheap resources in aproximately one month
+I distributed the job on 4 server workers, each has its own *workerN.sh*
+batch script.
+
+For instance, connect to first worker via ssh. Then open a *screen* session
+and launch first worker script.
+
+```bash
+nohup sh worker1.sh &
 ```
 
 ## Setup
@@ -93,6 +123,16 @@ git clone https://github.com/fibo/netvision.git
 
 See how to make an [S3 bucket public by default][S3_public].
 
+Set your environment to enable upload to S3
+
+```bash
+export AWS_ACCESS_KEY_ID=***
+export AWS_SECRET_ACCESS_KEY=***
+export AWS_DEFAULT_REGION=us-east-1
+```
+
+Optionally, add it to the *~/.bashrc*.
+
 ## Data structure
 
 ### Class C
@@ -105,8 +145,13 @@ See how to make an [S3 bucket public by default][S3_public].
 ## References
 
 * [IPv4 subnetting reference][IPv4_subnets]
+* [Reserved IP addresses][Reserved_IP_addresses]
 
+[IANA]: https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority
+[ICANN]: https://en.wikipedia.org/wiki/ICANN
 [IPv4_subnets]: https://en.wikipedia.org/wiki/IPv4_subnetting_reference
 [Perl_Net_Ping]: https://metacpan.org/pod/Net::Ping
+[Reserved_IP_addresses]: https://en.wikipedia.org/wiki/Reserved_IP_addresses
+[Root_nameservers]: https://en.wikipedia.org/wiki/Root_name_server
 [S3_public]: http://g14n.info/2016/04/s3-bucket-public-by-default
 [screen_how_to]: http://g14n.info/2015/05/gnu-screen

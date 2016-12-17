@@ -45,8 +45,67 @@ sub parse {
     return ( $a, $b, $c );
 }
 
+sub isReserved {
+    my $subnet = shift;
+
+    my ($a, $b, $c) = &parse($subnet);
+
+    return 1 if ($a == '0');
+    return 1 if ($a == '10');
+    return 1 if ($a == '127');
+    return 1 if (($a == '169') && ($b == '254'));
+    return 1 if (($a == '172') && ($b == '16'));
+    return 1 if (($a == '172') && ($b == '17'));
+    return 1 if (($a == '172') && ($b == '18'));
+    return 1 if (($a == '172') && ($b == '19'));
+    return 1 if (($a == '172') && ($b == '20'));
+    return 1 if (($a == '172') && ($b == '21'));
+    return 1 if (($a == '172') && ($b == '22'));
+    return 1 if (($a == '172') && ($b == '23'));
+    return 1 if (($a == '172') && ($b == '24'));
+    return 1 if (($a == '172') && ($b == '25'));
+    return 1 if (($a == '172') && ($b == '26'));
+    return 1 if (($a == '172') && ($b == '27'));
+    return 1 if (($a == '172') && ($b == '28'));
+    return 1 if (($a == '172') && ($b == '29'));
+    return 1 if (($a == '172') && ($b == '30'));
+    return 1 if (($a == '172') && ($b == '31'));
+    return 1 if (($a == '192') && ($b == '0') && ($c == '0'));
+    return 1 if (($a == '192') && ($b == '0') && ($c == '2'));
+    return 1 if (($a == '192') && ($b == '88') && ($c == '99'));
+    return 1 if (($a == '192') && ($b == '168'));
+    return 1 if (($a == '198') && ($b == '18'));
+    return 1 if (($a == '198') && ($b == '19'));
+    return 1 if (($a == '198') && ($b == '51') && ($c == '100'));
+    return 1 if (($a == '203') && ($b == '0') && ($c == '13'));
+    return 1 if ($a == '224');
+    return 1 if ($a == '225');
+    return 1 if ($a == '226');
+    return 1 if ($a == '227');
+    return 1 if ($a == '228');
+    return 1 if ($a == '229');
+    return 1 if ($a == '230');
+    return 1 if ($a == '231');
+    return 1 if ($a == '232');
+    return 1 if ($a == '233');
+    return 1 if ($a == '234');
+    return 1 if ($a == '235');
+    return 1 if ($a == '236');
+    return 1 if ($a == '237');
+    return 1 if ($a == '238');
+    return 1 if ($a == '239');
+    return 1 if ($a == '240');
+
+    return 0;
+}
+
 sub ping {
     my $subnet = shift;
+
+    if (&isReserved($subnet)) {
+        say "Subnet $subnet.* is reserved" if $verbose;
+        return 0
+    }
 
     my $start = time;
 
@@ -86,7 +145,7 @@ sub ping {
 
     my $sec = $end - $start;
 
-    say "Subnet $subnet pinged in $sec seconds." if $timing;
+    say "Subnet $subnet pinged in $sec seconds" if $timing;
 
     # Return a single 0 if no alive host was found.
     return 0 if $no_alive_host_found;
