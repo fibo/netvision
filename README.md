@@ -27,6 +27,10 @@ out of the scope of this project. Furthermore, the shape of IPv4 is more
 attractive in my opinion, it is easier to explain and with some effort
 could be printed.
 
+Internet is divided among 5 world regions each ruled by a [registry][Regional_Internet_registry].
+
+![Internet world regions](https://en.wikipedia.org/wiki/File:Regional_Internet_Registries_world_map.svg)
+
 ## Usage
 
 The scripts must be laucnhed by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
@@ -146,11 +150,13 @@ Optionally, add it to the *~/.bashrc*.
 
 * [IPv4 subnetting reference][IPv4_subnets]
 * [Reserved IP addresses][Reserved_IP_addresses]
+* [Regional Internet registry][Regional_Internet_registry]
 
 [IANA]: https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority
 [ICANN]: https://en.wikipedia.org/wiki/ICANN
 [IPv4_subnets]: https://en.wikipedia.org/wiki/IPv4_subnetting_reference
 [Perl_Net_Ping]: https://metacpan.org/pod/Net::Ping
+[Regional_Internet_registry]: https://en.wikipedia.org/wiki/Regional_Internet_registry
 [Reserved_IP_addresses]: https://en.wikipedia.org/wiki/Reserved_IP_addresses
 [Root_nameservers]: https://en.wikipedia.org/wiki/Root_name_server
 [S3_public]: http://g14n.info/2016/04/s3-bucket-public-by-default
