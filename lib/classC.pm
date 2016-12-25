@@ -135,6 +135,9 @@ sub ping {
         }
         else {
             $all_hosts_are_alive = 0;
+
+            say "Address $address does not respond" if $verbose;
+
             push @response, 0;
         }
     }
