@@ -7,6 +7,8 @@ use classC;
 use dataDir;
 use jsonFile;
 
+my $verbose = $ENV{VERBOSE};
+
 sub generateDataFileFor {
     my $classB_subnet = shift;
 
@@ -31,6 +33,8 @@ sub generateDataFileFor {
         # Check if class C data file already exists, otherwise create it.
         if ($json_file_does_not_exist) {
             &classC::generateDataFileFor($classC_subnet);
+        } else {
+            say "File $json_filepath already exists" if $verbose;
         }
 
         my $subnet_data = jsonFile::read($json_filepath);
