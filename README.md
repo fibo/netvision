@@ -15,7 +15,7 @@
 
 Every website you visit is associated to at least one IP address.
 
-The IPv4 space is composed aproximately by 256*256*256*256 addresses, some of them are private or reserved.
+The IPv4 space is composed aproximately by `256 * 256 * 256 * 256` addresses, some of them are private or reserved.
 
 IPv4 addresses will be replaced gradually with IPv6 addresses.
 IPv6 was introduced in 2004 on [Root nameservers][Root_nameservers]
@@ -33,7 +33,7 @@ Internet is divided among 5 world regions each ruled by a [registry][Regional_In
 
 ## Usage
 
-The scripts must be laucnhed by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
+The scripts must be launched by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
 
 ### Class C
 
@@ -151,7 +151,9 @@ Optionally, add it to the *~/.bashrc*.
 * [IPv4 subnetting reference][IPv4_subnets]
 * [Reserved IP addresses][Reserved_IP_addresses]
 * [Regional Internet registry][Regional_Internet_registry]
+* [List of assigned /8 IPv4 address blocks][Assigned_IPv4_addresses]
 
+[Assigned_IPv4_addresses]: https://en.wikipedia.org/wiki/List_of_assigned_/8_IPv4_address_blocks
 [IANA]: https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority
 [ICANN]: https://en.wikipedia.org/wiki/ICANN
 [IPv4_subnets]: https://en.wikipedia.org/wiki/IPv4_subnetting_reference
