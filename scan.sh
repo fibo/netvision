@@ -9,11 +9,18 @@ function scan () {
 	# an error.
 	mkdir -p data/$A
 
-	seq 1 255 | while read B; do ./generate_classB_JSON.pl $A.$B & done &
+	seq 1 255 | while read B
+		do
+			./generate_classB_JSON.pl $A.$B &
+			# Avoid conflicts among processes, otherwise we get errors like
+			# Can't exec "aws": Cannot allocate memory
+			# Can't get icmp protocol by name
+			sleep 2
+		done &
 
 	# Since timeout is set to one second and there are
 	# 256 * 256 = 65536
-	# IPv4 addresses targeted, lets...
-	sleep 65536
+	# IPv4 addresses targeted, and aws cli will do its job, lets...
+	sleep 70001
 }
 
