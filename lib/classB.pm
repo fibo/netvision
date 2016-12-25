@@ -3,7 +3,43 @@ use strict;
 use warnings;
 use v5.12;
 
+use classC;
 use dataDir;
+use jsonFile;
+
+sub generateDataFileFor {
+    my $classB_subnet = shift;
+
+    my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
+
+    my $data_dir = &dataDir::forClassB($classB_subnet);
+    &dataDir::create($data_dir);
+
+    my @aggregated_json_data;
+
+    my @classC_subnets;
+
+    for my $c ( 0 .. 255 ) {
+        push @classC_subnets, $classB_subnet . ".$c";
+    }
+
+    for my $classC_subnet (@classC_subnets) {
+        my $json_filepath = &jsonFile::forClassC($classC_subnet);
+
+        my $json_file_does_not_exist = not -e $json_filepath;
+
+        # Check if class C data file already exists, otherwise create it.
+        if ($json_file_does_not_exist) {
+            &classC::generateDataFileFor($classC_subnet);
+        }
+
+        my $subnet_data = jsonFile::read($json_filepath);
+
+        push @aggregated_json_data, $subnet_data;
+    }
+
+    &jsonFile::write( $aggregated_json_file, \@aggregated_json_data );
+}
 
 sub jsonFilepathOf {
     my $subnet = shift;
