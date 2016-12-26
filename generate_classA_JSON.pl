@@ -87,7 +87,11 @@ for my $b ( 0 .. 255 ) {
 
     say "$classB_subnet $resultB" if $verbose;
 
-    $subnet_data->{ping}->[$b] = $resultB;
+    # Add result, force number context otherwise JSON will be
+    # something like
+    #
+    # {"ping":["204","201","108" ...]}
+    $subnet_data->{ping}->[$b] = 0 + $resultB;
 }
 
 &jsonFile::write( $aggregated_json_file, $subnet_data );
