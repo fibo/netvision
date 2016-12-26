@@ -34,7 +34,7 @@ for my $b ( 0 .. 255 ) {
             &classB::generateDataFileFor($classB_subnet);
 
             # Upload it to S3.
-            &S3::upload($aggregated_json_file);
+            &S3::upload($json_filepath);
         }
     }
 }
