@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use v5.12;
 
+my $verbose = $ENV{VERBOSE};
+
 # Check that aws cli environment variable are defined.
 sub envDefinedOrExit {
     defined $ENV{AWS_DEFAULT_REGION}
@@ -15,6 +17,8 @@ sub envDefinedOrExit {
 sub download {
     my $file_path = shift || die "missing parameter";
 
+    say "Download $file_path";
+
     `aws s3 cp s3://ip-v4.space/$file_path ${file_path}`;
 }
 
@@ -25,6 +29,8 @@ sub exists {
 
 sub upload {
     my $file_path = shift || die "missing parameter";
+
+    say "Upload $file_path";
 
     `aws s3 cp ${file_path} s3://ip-v4.space/$file_path`;
 }
