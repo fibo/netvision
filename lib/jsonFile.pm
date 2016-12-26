@@ -7,6 +7,16 @@ use JSON::PP;
 
 use dataDir;
 
+sub forClassA {
+    my $subnet = shift;
+
+    my $target_dir = &dataDir::forClassA($subnet);
+
+    my $json_filepath = "$target_dir/$subnet.json";
+
+    return $json_filepath;
+}
+
 sub forClassB {
     my $subnet = shift;
 

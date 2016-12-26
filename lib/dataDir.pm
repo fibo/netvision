@@ -8,6 +8,12 @@ use File::Path 'make_path';
 use classB;
 use classC;
 
+sub forClassA {
+    my $a = shift;
+
+    return "data/$a";
+}
+
 sub forClassB {
     my $subnet = shift;
 
