@@ -5,6 +5,7 @@ use warnings;
 
 use lib 'lib';
 
+use classB;
 use jsonFile;
 use S3;
 
@@ -29,7 +30,11 @@ for my $b ( 0 .. 255 ) {
         if ( &S3::exists($json_filepath) ) {
             &S3::download($json_filepath);
         } else {
-            say "TODO generate file for $classB_subnet" if $verbose;
+            # Generate missing data file.
+            &classB::generateDataFileFor($classB_subnet);
+
+            # Upload it to S3.
+            &S3::upload($aggregated_json_file);
         }
     }
 }
