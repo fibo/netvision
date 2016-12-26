@@ -7,6 +7,6 @@ use lib 'lib';
 
 use classC;
 
-my $subnet = $ARGV[0];
+my $subnet = $ARGV[0] || die "missing argument\n";
 
 classC::generateDataFileFor($subnet);

@@ -8,26 +8,22 @@ use lib 'lib';
 use classC;
 use dataDir;
 use jsonFile;
+use S3;
 
-# Check that aws cli environment variable are defined.
-defined $ENV{AWS_DEFAULT_REGION}
-  and $ENV{AWS_DEFAULT_REGION} ne 'us-east-1'
-  and defined $ENV{AWS_SECRET_ACCESS_KEY}
-  and defined $ENV{AWS_ACCESS_KEY_ID}
-  or die "aws cli environment variables not defined\n";
+&S3::envDefinedOrExit;
 
-my $classB_subnet = $ARGV[0];
+my $classB_subnet = $ARGV[0] || die "missing argument\n";
 
 my $aggregated_json_file = &jsonFile::forClassB($classB_subnet);
 
 # Exit if class B data file already exists on S3.
-my $aggregated_json_file_exists = `aws s3 ls s3://ip-v4.space/$aggregated_json_file`;
-
-if ( $aggregated_json_file_exists ) {
+if ( &S3::exists($aggregated_json_file) ) {
     die "File s3://ip-v4.space/$aggregated_json_file already exists\n";
+} else {
+    # Scan subnet.
+    &classB::generateDataFileFor($classB_subnet);
+
+    # Upload file to S3.
+    &S3::upload($aggregated_json_file);
 }
 
-&classB::generateDataFileFor($classB_subnet);
-
-# Upload file to S3.
-`aws s3 cp ${aggregated_json_file} s3://ip-v4.space/$aggregated_json_file`;
