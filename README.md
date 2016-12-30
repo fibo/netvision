@@ -135,6 +135,40 @@ export AWS_DEFAULT_REGION=us-east-1
 
 Optionally, add it to the *~/.bashrc*.
 
+### Sync
+
+Label each host as *workerN*, where *workerN* should sync data from *worker[N+1]* cyclically.
+
+Add to your .bashrc
+
+```bash
+export PS1="workerN# "
+export NEXT_WORKER=1.2.3.4
+export SSH_PORT=XX
+
+function sync_data () {
+    rsync -avz -e "ssh -p $SSH_PORT" $WORKER1:/root/netvision/data/ /root/netvision/data/
+}
+```
+
+where
+
+* `PS1` is set to current worker, for example N could be 1.
+* XX is the ssh port, other than 22 for security reasons.
+* `NEXT_WORKER` is the IP address of the next worker in the chain.
+
+Create an ssh key
+
+```bash
+ssh-keygen
+```
+
+And copy it to the next worker
+
+```bash
+ssh-copy-id -p $SSH_PORT -i ~/.ssh/id_rsa $NEXT_WORKER
+```
+
 ## Data structure
 
 ### Class C
