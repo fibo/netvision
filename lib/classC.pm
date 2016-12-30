@@ -28,6 +28,7 @@ sub generateDataFileFor {
     # Return if file already exists locally.
     if ( -e $json_filepath and not $overwrite ) {
       say "File $json_filepath already exists" if $verbose;
+      return;
     }
 
     my $data_dir = &dataDir::forClassC($subnet);
