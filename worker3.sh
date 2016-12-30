@@ -11,7 +11,7 @@ scan 123
 scan 124
 scan 125
 scan 126
-# scan 127 is reserved
+scan 127
 scan 128
 scan 129
 scan 130

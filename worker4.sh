@@ -57,7 +57,23 @@ scan 220
 scan 221
 scan 222
 scan 223
-# scan 224 to 240 are reserved
+scan 224
+scan 225
+scan 226
+scan 227
+scan 228
+scan 229
+scan 230
+scan 231
+scan 232
+scan 233
+scan 234
+scan 235
+scan 236
+scan 237
+scan 238
+scan 239
+scan 240
 scan 241
 scan 242
 scan 243

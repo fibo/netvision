@@ -13,7 +13,7 @@ scan 6
 scan 7
 scan 8
 scan 9
-# scan 10 is reserved
+scan 10
 scan 11
 scan 12
 scan 13
