@@ -18,7 +18,7 @@ my $verbose = $ENV{VERBOSE};
 my $timing  = $ENV{TIMING};
 $timing = 1 if $verbose;
 
-my $overwrite = $ENV{OVERWRITE}
+my $overwrite = $ENV{OVERWRITE};
 
 sub generateDataFileFor {
     my $subnet = shift;
