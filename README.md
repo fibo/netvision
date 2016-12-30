@@ -88,9 +88,7 @@ upload them to S3 bucket **s3://ip-v4.space**.
 Ping a whole IPv4 class A subnet, for instance `16.*`
 
 ```bash
-export TIMING=1
-source ./scan.sh
-scan 16
+./generate_classA_JSON 16
 ```
 
 ### The Internet
