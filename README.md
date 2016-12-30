@@ -80,8 +80,14 @@ than crontab, nohup or other techniques.
 ./generate_classB_JSON.pl 1.2
 ```
 
-It will generate files *data/1/1.2.json* and *data/1/1.2.json.tar.gz* and
-upload them to S3 bucket **s3://ip-v4.space**.
+It generates file *data/1/1.2.json* and upload it to S3 bucket **s3://ip-v4.space**.
+If the file already exists locally or on S3, it will exit.
+This behaviour can be controlled with the `OVERWRITE` environment variable.
+
+```bash
+export OVERWRITE=1
+./generate_classB_JSON.pl 1.2
+```
 
 ### Class A
 
