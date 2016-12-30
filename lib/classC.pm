@@ -12,14 +12,23 @@ use jsonFile;
 $OUTPUT_AUTOFLUSH = 1;
 
 my $timeout = 1;
+
 my $verbose = $ENV{VERBOSE};
+
 my $timing  = $ENV{TIMING};
 $timing = 1 if $verbose;
+
+my $overwrite = $ENV{OVERWRITE}
 
 sub generateDataFileFor {
     my $subnet = shift;
 
     my $json_filepath = &jsonFile::forClassC($subnet);
+
+    # Return if file already exists locally.
+    if ( -e $json_filepath and not $overwrite ) {
+      say "File $json_filepath already exists" if $verbose;
+    }
 
     my $data_dir = &dataDir::forClassC($subnet);
 
