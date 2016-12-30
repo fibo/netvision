@@ -30,12 +30,7 @@ sub generateDataFileFor {
 
         my $json_file_does_not_exist = not -e $json_filepath;
 
-        # Check if class C data file already exists, otherwise create it.
-        if ($json_file_does_not_exist) {
-            &classC::generateDataFileFor($classC_subnet);
-        } else {
-            say "File $json_filepath already exists" if $verbose;
-        }
+        &classC::generateDataFileFor($classC_subnet);
 
         my $subnet_data = jsonFile::read($json_filepath);
 
