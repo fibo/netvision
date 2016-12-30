@@ -147,7 +147,7 @@ export NEXT_WORKER=1.2.3.4
 export SSH_PORT=XX
 
 function sync_data () {
-    rsync -avz -e "ssh -p $SSH_PORT" $WORKER1:/root/netvision/data/ /root/netvision/data/
+    rsync -avz -e "ssh -p $SSH_PORT" $NEXT_WORKER:/root/netvision/data/$1 /root/netvision/data/$1
 }
 ```
 
@@ -167,6 +167,18 @@ And copy it to the next worker
 
 ```bash
 ssh-copy-id -p $SSH_PORT -i ~/.ssh/id_rsa $NEXT_WORKER
+```
+
+Now if you want to sync all data launch
+
+```bash
+sync_data
+```
+
+To sync only a subfolder, pass it as argument
+
+```bash
+sync_data 10/235
 ```
 
 ## Data structure
