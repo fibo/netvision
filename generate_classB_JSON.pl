@@ -3,6 +3,8 @@ use v5.12;
 use strict;
 use warnings;
 
+use File::Find ();
+
 use lib 'lib';
 
 use classB;
@@ -35,3 +37,8 @@ if ( &S3::exists($aggregated_json_file) and not $overwrite ) {
 # Upload file to S3.
 &S3::upload($aggregated_json_file);
 
+# Clean up data dir
+my $data_dir = &dataDir::forClassB($classB_subnet);
+File::Find::find( { wanted => \&cleanup }, $data_dir );
+
+sub cleanup { unlink }
