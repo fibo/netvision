@@ -17,7 +17,7 @@ sub envDefinedOrExit {
 sub download {
     my $file_path = shift || die "missing parameter";
 
-    say "Download $file_path";
+    say "Download $file_path" if $verbose;
 
     `aws s3 cp s3://ip-v4.space/$file_path ${file_path}`;
 }
@@ -30,7 +30,7 @@ sub exists {
 sub upload {
     my $file_path = shift || die "missing parameter";
 
-    say "Upload $file_path";
+    say "Upload $file_path" if $verbose;
 
     `aws s3 cp ${file_path} s3://ip-v4.space/$file_path`;
 }
