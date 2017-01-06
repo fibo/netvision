@@ -30,7 +30,9 @@ function scan () {
 				do
 					until (( `num_processes` < "$MAX_PROCESSES"  ))
 					do
-						sleep 10
+						# Sleep for a while in order to give priority to
+						# current class B subnet.
+						sleep 200
 					done
 
 					./generate_classC_JSON.pl $A.$B.$C &
