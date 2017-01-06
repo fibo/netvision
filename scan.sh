@@ -6,6 +6,11 @@ function num_processes () {
   echo `ps -e -o comm= | grep generate_class | wc -l`
 }
 
+function num_classC_files () {
+	A=$1
+	B=$2
+  echo `ls data/$A/$B | wc -l`
+}
 #
 # Given a class A subnet as parameter:
 #
@@ -34,15 +39,19 @@ function scan () {
 						# current class B subnet.
 						sleep 200
 					done
-
+					# Launch process in background in order to finish as
+					# soon as possible every class C subnet.
 					./generate_classC_JSON.pl $A.$B.$C &
 				done
 
-			until (( `num_processes` < "$MAX_PROCESSES"  ))
+			until (( `num_classC_files $A $B` < 256  ))
 			do
-				sleep 10
+				sleep 20
 			done
-			./generate_classB_JSON.pl $A.$B &
+			# Do not launch the process in background, so if it is the
+			# last class B subnet, the generation of class A file will
+			# find all necessary files.
+			./generate_classB_JSON.pl $A.$B
 			sleep 2
 		done
 
