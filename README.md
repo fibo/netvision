@@ -89,6 +89,13 @@ export OVERWRITE=1
 ./generate_classB_JSON.pl 1.2
 ```
 
+To scan a class B subnet faster, you can launch processes in parallel
+
+```bash
+source scan.sh
+scanB 1 2
+```
+
 ### Class A
 
 Ping a whole IPv4 class A subnet, for instance `16.*`
