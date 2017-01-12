@@ -26,27 +26,39 @@ function scanB () {
 	A=$1
 	B=$2
 
-	seq 0 255 | while read C
-		do
-				until (( `num_processes` < "$MAX_PROCESSES"  ))
-				do
-					# Sleep for a while in order to give priority to
-					# current class B subnet.
-					sleep 200
-				done
-				# Launch process in background in order to finish as
-				# soon as possible every class C subnet.
-				./generate_classC_JSON.pl $A.$B.$C &
-
-			until (( `num_classC_files $A $B` < 256  ))
+	if test $OVERWRITE
+	then
+		seq 0 255 | while read C
 			do
-				sleep 20
+					until (( `num_processes` < "$MAX_PROCESSES"  ))
+					do
+						# Sleep for a while in order to give priority to
+						# current class B subnet.
+						sleep 200
+					done
+					# Launch process in background in order to finish as
+					# soon as possible every class C subnet.
+					./generate_classC_JSON.pl $A.$B.$C &
+
+				until (( `num_classC_files $A $B` < 256  ))
+				do
+					sleep 20
+				done
+				# Do not launch the process in background, so if it is the
+				# last class B subnet, the generation of class A file will
+				# find all necessary files.
+				./generate_classB_JSON.pl $A.$B
 			done
-			# Do not launch the process in background, so if it is the
-			# last class B subnet, the generation of class A file will
-			# find all necessary files.
-			./generate_classB_JSON.pl $A.$B
+	else
+		until (( `num_processes` < "$MAX_PROCESSES"  ))
+		do
+			# Sleep for a lot, since class B subnets can take even more than
+			# 65000 seconds, and at this point OVERWRITE is not set so we are
+			# looping on only class B subnets.
+			sleep 2000
 		done
+		./generate_classB_JSON.pl $A.$B &
+	fi
 }
 
 # Scan class A subnet parallely.
