@@ -37,7 +37,6 @@ function scanB () {
 				# Launch process in background in order to finish as
 				# soon as possible every class C subnet.
 				./generate_classC_JSON.pl $A.$B.$C &
-			done
 
 			until (( `num_classC_files $A $B` < 256  ))
 			do
