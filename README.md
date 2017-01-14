@@ -180,7 +180,13 @@ ssh-copy-id -i ~/.ssh/id_rsa $NEXT_WORKER
 ```
 
 Note that `-p $SSH_PORT` flag is not set cause, by now, next worker's ssh service
-is still running on default port.
+is still running on default port. But, if this is the last worker in the chain
+and next worker is older than current one, hence has everything installed, you
+will need to specify custom ssh port, so launch
+
+```bash
+ssh-copy-id -p $SSH_PORT -i ~/.ssh/id_rsa $NEXT_WORKER
+```
 
 ### Sync data
 
