@@ -176,8 +176,11 @@ ssh-keygen
 And copy it to the next worker
 
 ```bash
-ssh-copy-id -p $SSH_PORT -i ~/.ssh/id_rsa $NEXT_WORKER
+ssh-copy-id -i ~/.ssh/id_rsa $NEXT_WORKER
 ```
+
+Note that `-p $SSH_PORT` flag is not set cause, by now, next worker's ssh service
+is still running on default port.
 
 ### Sync data
 
