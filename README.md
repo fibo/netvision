@@ -194,13 +194,13 @@ sync_data 10/235
 Conquer next worker
 
 ```bash
-ssh_next 'apt-get update -y'
-ssh_next 'apt-get install git awscli -y'
-ssh_next "echo export SSH_PORT=$SSH_PORT >> .bashrc"
-ssh_next "echo export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION >> .bashrc"
-ssh_next "echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >> .bashrc"
-ssh_next "echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >> .bashrc"
-ssh_next 'git clone https://github.com/fibo/netvision.git'
+ssh_next apt-get update -y
+ssh_next apt-get install git awscli -y
+ssh_next echo export SSH_PORT=$SSH_PORT                           \>\> .bashrc
+ssh_next echo export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION       \>\> .bashrc
+ssh_next echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID         \>\> .bashrc
+ssh_next echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \>\> .bashrc
+ssh_next git clone https://github.com/fibo/netvision.git
 ```
 
 Then connect via ssh
