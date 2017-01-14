@@ -148,7 +148,7 @@ export AWS_DEFAULT_REGION=us-east-1
 
 Optionally, add it to the *~/.bashrc*.
 
-### Ssh
+### Ssh connection
 
 Label each host as *workerN*, where *workerN* should sync data from *worker[N+1]* cyclically.
 
@@ -167,7 +167,7 @@ where
 * XX is the ssh port, other than 22 for security reasons.
 * `NEXT_WORKER` is the IP address of the next worker in the chain.
 
-Create an ssh key
+### Create an ssh key
 
 ```bash
 ssh-keygen
@@ -178,6 +178,8 @@ And copy it to the next worker
 ```bash
 ssh-copy-id -p $SSH_PORT -i ~/.ssh/id_rsa $NEXT_WORKER
 ```
+
+### Sync data
 
 Now if you want to sync all data launch
 
@@ -191,7 +193,16 @@ To sync only a subfolder, pass it as argument
 sync_data 10/235
 ```
 
-Conquer next worker
+### Conquer next worker
+
+First of all, change ssh port
+
+```bash
+ssh $NEXT_WORKER -n perl -i -p -e "s/Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+ssh $NEXT_WORKER -n service ssh restart
+```
+
+Now proceed with other setup steps using `ssh_next` util.
 
 ```bash
 ssh_next apt-get update -y
