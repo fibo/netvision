@@ -148,7 +148,7 @@ export AWS_DEFAULT_REGION=us-east-1
 
 Optionally, add it to the *~/.bashrc*.
 
-### Sync
+### Ssh
 
 Label each host as *workerN*, where *workerN* should sync data from *worker[N+1]* cyclically.
 
@@ -158,10 +158,7 @@ Add to your .bashrc
 export PS1="workerN# "
 export NEXT_WORKER=1.2.3.4
 export SSH_PORT=XX
-
-function sync_data () {
-    rsync -avz -e "ssh -p $SSH_PORT" $NEXT_WORKER:/root/netvision/data/$1 /root/netvision/data/$1
-}
+source netvision/.bashrc.netivision
 ```
 
 where
@@ -193,6 +190,26 @@ To sync only a subfolder, pass it as argument
 ```bash
 sync_data 10/235
 ```
+
+Conquer next worker
+
+```bash
+ssh_next 'apt-get update -y'
+ssh_next 'apt-get install git awscli -y'
+ssh_next "echo export SSH_PORT=$SSH_PORT >> .bashrc"
+ssh_next "echo export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION >> .bashrc"
+ssh_next "echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >> .bashrc"
+ssh_next "echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >> .bashrc"
+ssh_next 'git clone https://github.com/fibo/netvision.git'
+```
+
+Then connect via ssh
+
+```bash
+ssh_next
+```
+
+Set `PS1` and `NEXT_WORKER` properly and iterate.
 
 ## Data structure
 

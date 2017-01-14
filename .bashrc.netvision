@@ -1,0 +1,7 @@
+function sync_data () {
+	rsync -avz -e "ssh -p $SSH_PORT" $NEXT_WORKER:/root/netvision/data/$1 /root/netvision/data/$1
+}
+
+function ssh_next () {
+	ssh -n -p $SSH_PORT $NEXT_WORKER $1
+}

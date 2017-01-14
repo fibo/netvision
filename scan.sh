@@ -6,7 +6,7 @@ MAX_PROCESSES=250
 ###
 
 function num_processes () {
-  echo `ps -e -o comm= | grep generate_class | wc -l`
+	echo `ps -e -o comm= | grep generate_class | wc -l`
 }
 
 # Count how many class C subnet files there are
