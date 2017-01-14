@@ -3,5 +3,10 @@ function sync_data () {
 }
 
 function ssh_next () {
-	ssh -n -p $SSH_PORT $NEXT_WORKER $1
+	if test $1
+	then
+		echo ssh -n -p $SSH_PORT $NEXT_WORKER $1
+	else
+		echo ssh -p $SSH_PORT $NEXT_WORKER
+	fi
 }
