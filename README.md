@@ -158,7 +158,7 @@ Add to your .bashrc
 export PS1="workerN# "
 export NEXT_WORKER=1.2.3.4
 export SSH_PORT=XX
-source netvision/.bashrc.netivision
+source ~/netvision/.bashrc.netivision
 ```
 
 where
@@ -220,7 +220,7 @@ ssh_next echo export SSH_PORT=$SSH_PORT                           \>\> .bashrc
 ssh_next echo export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION       \>\> .bashrc
 ssh_next echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID         \>\> .bashrc
 ssh_next echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \>\> .bashrc
-ssh_next echo source netvision/.bashrc.netvision                  \>\> .bashrc
+ssh_next echo source ~/netvision/.bashrc.netvision                \>\> .bashrc
 ssh_next git clone https://github.com/fibo/netvision.git
 ```
 
