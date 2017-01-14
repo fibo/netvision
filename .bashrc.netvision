@@ -1,11 +1,19 @@
+#
+# Sync data with next worker.
+###
+
 function sync_data () {
 	rsync -avz -e "ssh -p $SSH_PORT" $NEXT_WORKER:/root/netvision/data/$1 /root/netvision/data/$1
 }
 
+#
+# Connect to or execute a command on next worker.
+###
+
 function ssh_next () {
-	if test $1
+	if [ $# -gt 0 ]
 	then
-		ssh -n -p $SSH_PORT $NEXT_WORKER $1
+		ssh -n -p $SSH_PORT $NEXT_WORKER "$*"
 	else
 		ssh -p $SSH_PORT $NEXT_WORKER
 	fi
