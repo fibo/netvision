@@ -207,7 +207,7 @@ sync_data 10/235
 First of all, change ssh port
 
 ```bash
-ssh $NEXT_WORKER -n perl -i -p -e "s/Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+ssh $NEXT_WORKER -n "perl -i -p -e \"s/Port 22/Port $SSH_PORT/\" /etc/ssh/sshd_config"
 ssh $NEXT_WORKER -n service ssh restart
 ```
 
