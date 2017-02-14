@@ -124,6 +124,7 @@ nohup ./worker1.sh &
 On an Ubuntu 14 server, install required software
 
 ```bash
+apt-get update
 apt-get install -y awscli git
 ```
 
