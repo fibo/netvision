@@ -159,7 +159,7 @@ Add to your .bashrc
 export PS1="workerN# "
 export NEXT_WORKER=1.2.3.4
 export SSH_PORT=XX
-source ~/netvision/.bashrc.netivision
+source ~/netvision/.bashrc.netvision
 ```
 
 where
