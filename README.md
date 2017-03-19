@@ -124,6 +124,7 @@ nohup ./worker1.sh &
 On an Ubuntu 14 server, install required software
 
 ```bash
+apt-get update
 apt-get install -y awscli git
 ```
 
@@ -148,7 +149,7 @@ export AWS_DEFAULT_REGION=us-east-1
 
 Optionally, add it to the *~/.bashrc*.
 
-### Sync
+### Ssh connection
 
 Label each host as *workerN*, where *workerN* should sync data from *worker[N+1]* cyclically.
 
@@ -158,10 +159,7 @@ Add to your .bashrc
 export PS1="workerN# "
 export NEXT_WORKER=1.2.3.4
 export SSH_PORT=XX
-
-function sync_data () {
-    rsync -avz -e "ssh -p $SSH_PORT" $NEXT_WORKER:/root/netvision/data/$1 /root/netvision/data/$1
-}
+source ~/netvision/.bashrc.netivision
 ```
 
 where
@@ -170,7 +168,7 @@ where
 * XX is the ssh port, other than 22 for security reasons.
 * `NEXT_WORKER` is the IP address of the next worker in the chain.
 
-Create an ssh key
+### Create an ssh key
 
 ```bash
 ssh-keygen
@@ -179,8 +177,19 @@ ssh-keygen
 And copy it to the next worker
 
 ```bash
+ssh-copy-id -i ~/.ssh/id_rsa $NEXT_WORKER
+```
+
+Note that `-p $SSH_PORT` flag is not set cause, by now, next worker's ssh service
+is still running on default port. But, if this is the last worker in the chain
+and next worker is older than current one, hence has everything installed, you
+will need to specify custom ssh port, so launch
+
+```bash
 ssh-copy-id -p $SSH_PORT -i ~/.ssh/id_rsa $NEXT_WORKER
 ```
+
+### Sync data
 
 Now if you want to sync all data launch
 
@@ -193,6 +202,36 @@ To sync only a subfolder, pass it as argument
 ```bash
 sync_data 10/235
 ```
+
+### Conquer next worker
+
+First of all, change ssh port
+
+```bash
+ssh $NEXT_WORKER -n "perl -i -p -e \"s/Port 22/Port $SSH_PORT/\" /etc/ssh/sshd_config"
+ssh $NEXT_WORKER -n service ssh restart
+```
+
+Now proceed with other setup steps using `ssh_next` util.
+
+```bash
+ssh_next apt-get update -y
+ssh_next apt-get install git awscli -y
+ssh_next echo export SSH_PORT=$SSH_PORT                           \>\> .bashrc
+ssh_next echo export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION       \>\> .bashrc
+ssh_next echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID         \>\> .bashrc
+ssh_next echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \>\> .bashrc
+ssh_next echo source ~/netvision/.bashrc.netvision                \>\> .bashrc
+ssh_next git clone https://github.com/fibo/netvision.git
+```
+
+Then connect via ssh
+
+```bash
+ssh_next
+```
+
+Set `PS1` and `NEXT_WORKER` properly and iterate.
 
 ## Data structure
 
