@@ -8,7 +8,7 @@ my $verbose = $ENV{VERBOSE};
 # Check that aws cli environment variable are defined.
 sub envDefinedOrExit {
     defined $ENV{AWS_DEFAULT_REGION}
-    and $ENV{AWS_DEFAULT_REGION} ne 'us-east-1'
+    and $ENV{AWS_DEFAULT_REGION} eq 'us-east-1'
     and defined $ENV{AWS_SECRET_ACCESS_KEY}
     and defined $ENV{AWS_ACCESS_KEY_ID}
     or die "aws cli environment variables not defined\n";
