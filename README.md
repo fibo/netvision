@@ -33,7 +33,15 @@ Internet is divided among 5 world regions each ruled by a [registry][Regional_In
 
 ## Usage
 
-The scripts must be launched by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
+The scan scripts must be launched by **root**, as required by the [Net::Ping][Perl_Net_Ping] `icmp` mode.
+
+### Master tile
+
+Generate the IPv4 space master tile.
+
+```bash
+./generate_master_tile_JSON.pl
+```
 
 ### Class C
 
