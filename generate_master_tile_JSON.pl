@@ -32,7 +32,7 @@ for my $a ( 0 .. 255 ) {
        }
        else {
            # File is missing, do not block master tile creation.
-           $master_tile_data->{ping}->[$a] = 0;
+           $master_tile_data->{ping}->[$a] = -1;
        }
     } else {
         my $subnetA_data = jsonFile::read($json_filepath);
