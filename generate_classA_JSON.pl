@@ -22,79 +22,81 @@ if ( ( $classA_subnet < 0 ) or ( $classA_subnet >= 255 ) ) {
 
 my $aggregated_json_file = &jsonFile::forClassA($classA_subnet);
 
-my $subnet_data = { subnet => $classA_subnet, ping => [] };
+# my $subnet_data = { subnet => $classA_subnet, ping => [] };
+my @subnet_data;
 
 my @aggregated_json_data;
 
 for my $b ( 0 .. 255 ) {
     my $classB_subnet = "$classA_subnet.$b";
-
-    my $resultB = 0;
+    my @classB_ping;
+    my $at_least_one_classC_ping_is_not_zero = 0;
 
     my $json_filepath = &jsonFile::forClassB($classB_subnet);
 
-    my $json_file_does_not_exist = not -e $json_filepath;
+    my $json_file_does_not_exist;
 
+    $json_file_does_not_exist = not -e $json_filepath;
+
+    # Try to download data file from S3, if any.
     if ($json_file_does_not_exist) {
         if ( &S3::exists($json_filepath) ) {
             &S3::download($json_filepath);
         }
-        else {
-            # Generate missing data file.
-            &classB::generateDataFileFor($classB_subnet);
-
-            # Upload it to S3.
-            &S3::upload($json_filepath);
-        }
     }
 
-    my $subnetB_data = jsonFile::read($json_filepath);
+    $json_file_does_not_exist = not -e $json_filepath;
 
-    for my $subnetC_data ( @{$subnetB_data} ) {
-        my $subnetC = $subnetC_data->{subnet};
-        my $pingC   = $subnetC_data->{ping};
+    if ($json_file_does_not_exist) {
 
-        my $resultC;
+        # No data found, fill it with empty data.
+        push @subnet_data,
+          {
+            ping   => -1,
+            subnet => $classB_subnet
+          };
 
-        # At this level, count all 0 and 1 and output a single 0 or 1
-        # depending on how many of them are found.
-        if ( $pingC eq 0 ) {
-            $resultC = 0;
-        }
-        elsif ( $pingC eq 1 ) {
-            $resultC = 1;
-        }
-        else {
-            $resultC += $_ for ( @{ $subnetC_data->{ping} } );
+        say "No data for $classB_subnet" if $verbose;
+    }
+    else {
+        my $subnetB_data = jsonFile::read($json_filepath);
 
-            if ( $resultC > 128 ) {
+        for my $subnetC_data ( @{$subnetB_data} ) {
+            my $pingC = $subnetC_data->{ping};
 
-                # There are more 0 than 1.
+            my $resultC;
+
+            if ( $pingC eq 0 ) {
                 $resultC = 0;
             }
             else {
-                $resultC = 1;
+                $at_least_one_classC_ping_is_not_zero = 1;
+                $resultC                              = 1;
             }
+
+            push @classB_ping, $resultC;
         }
 
-        # Taking advantage of the analogy between colors and IPs,
-        # I mean that there are exactly 255 in every subnet and
-        # rgb colors range from 0 to 255, it is worth to write a sum,
-        # so if a cell get a 0 it will be white, the more it reaches 255
-        # the more color it will have. It will be a nice effect.
-        $resultB += $resultC;
+        if ($at_least_one_classC_ping_is_not_zero) {
+            push @subnet_data,
+              {
+                ping   => \@classB_ping,
+                subnet => $classB_subnet
+              };
+        }
+        else {
+            push @subnet_data,
+              {
+                ping   => 0,
+                subnet => $classB_subnet
+              };
+        }
+
+        say "$classB_subnet" if $verbose;
     }
-
-    say "$classB_subnet $resultB" if $verbose;
-
-    # Add result, force number context otherwise JSON will be
-    # something like
-    #
-    # {"ping":["204","201","108" ...]}
-    $subnet_data->{ping}->[$b] = 0 + $resultB;
 }
 
-&jsonFile::write( $aggregated_json_file, $subnet_data );
+&jsonFile::write( $aggregated_json_file, \@subnet_data );
 
 # Upload file to S3.
 &S3::upload($aggregated_json_file);
