@@ -22,7 +22,7 @@ if ( ( $classA_subnet < 0 ) or ( $classA_subnet >= 255 ) ) {
 
 my $aggregated_json_file = &jsonFile::forClassA($classA_subnet);
 
-my @subnet_data = [];
+my @subnet_data;
 
 my @aggregated_json_data;
 
@@ -45,7 +45,12 @@ for my $b ( 0 .. 255 ) {
     }
 
     if ($json_file_does_not_exist) {
-        push @classB_ping, -1;
+        push @subnet_data,
+          {
+            ping   => -1,
+            subnet => $classB_subnet
+          };
+
         say "No data for $classB_subnet" if $verbose;
         next;
     }
