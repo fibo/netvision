@@ -14,40 +14,75 @@ my $verbose = $ENV{VERBOSE};
 
 &S3::envDefinedOrExit;
 
-my $master_tile_data = { ping => [] };
+my @master_tile_data;
 
-my @aggregated_json_data;
 my $aggregated_json_file = 'data/master_tile.json';
 
-for my $a ( 0 .. 255 ) {
-    my $resultA = 0;
+for my $classA_subnet ( 0 .. 255 ) {
+    my @classA_ping;
+    my $at_least_one_classB_ping_is_not_zero = 0;
 
-    my $json_filepath = &jsonFile::forClassA($a);
+    my $json_filepath = &jsonFile::forClassA($classA_subnet);
 
-    my $json_file_does_not_exist = not -e $json_filepath;
+    my $json_file_does_not_exist;
+
+    $json_file_does_not_exist = not -e $json_filepath;
+
+    # Try to download data file from S3, if any.
+    if ($json_file_does_not_exist) {
+        if ( &S3::exists($json_filepath) ) {
+            &S3::download($json_filepath);
+        }
+    }
+
+    $json_file_does_not_exist = not -e $json_filepath;
 
     if ($json_file_does_not_exist) {
-       if ( &S3::exists($json_filepath) ) {
-           &S3::download($json_filepath);
-       }
-       else {
-           # File is missing, do not block master tile creation.
-           $master_tile_data->{ping}->[$a] = -1;
-       }
-    } else {
-        my $subnetA_data = jsonFile::read($json_filepath);
-        my $sum = 0;
 
-        for my $count (@{$subnetA_data->{ping}}) {
-            $sum += $count;
+        # File is missing, do not block master tile creation.
+        push @master_tile_data, -1;
+        say "No data for $classA_subnet" if $verbose;
+        next;
+    }
+    else {
+        my $subnetA_data = jsonFile::read($json_filepath);
+
+        for my $subnetB_data ( @{$subnetA_data} ) {
+            my $pingB = $subnetB_data->{ping};
+
+            my $resultB;
+
+            if ( ( $pingB eq -1 ) || ( $pingB eq 0 ) ) {
+                $resultB = $pingB;
+            }
+            else {
+                $at_least_one_classB_ping_is_not_zero = 1;
+                $resultB                              = 1;
+            }
+
+            push @classA_ping, $resultB;
         }
 
-        my $average = int($sum / 255);
-        $master_tile_data->{ping}->[$a] = $average;
+        if ($at_least_one_classB_ping_is_not_zero) {
+            push @master_tile_data,
+              {
+                ping   => \@classA_ping,
+                subnet => $classA_subnet
+              };
+        }
+        else {
+            push @master_tile_data,
+              {
+                ping   => 0,
+                subnet => $classA_subnet
+              };
+        }
+
+        say "$classA_subnet" if $verbose;
     }
 }
 
-&jsonFile::write( $aggregated_json_file, $master_tile_data );
+&jsonFile::write( $aggregated_json_file, \@master_tile_data );
 
 # Upload file to S3.
 &S3::upload($aggregated_json_file);
