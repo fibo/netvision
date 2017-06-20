@@ -6,7 +6,6 @@ use warnings;
 use lib 'lib';
 
 use classA;
-use classB;
 use jsonFile;
 use S3;
 
@@ -38,48 +37,43 @@ for my $classA_subnet ( 0 .. 255 ) {
     $json_file_does_not_exist = not -e $json_filepath;
 
     if ($json_file_does_not_exist) {
-
-        # File is missing, do not block master tile creation.
-        push @master_tile_data, -1;
-        say "No data for $classA_subnet" if $verbose;
-        next;
+        &classA::generateDataFileFor($classA_subnet);
     }
-    else {
-        my $subnetA_data = jsonFile::read($json_filepath);
 
-        for my $subnetB_data ( @{$subnetA_data} ) {
-            my $pingB = $subnetB_data->{ping};
+    my $subnetA_data = jsonFile::read($json_filepath);
 
-            my $resultB;
+    for my $subnetB_data ( @{$subnetA_data} ) {
+        my $pingB = $subnetB_data->{ping};
 
-            if ( ( $pingB eq -1 ) || ( $pingB eq 0 ) ) {
-                $resultB = $pingB;
-            }
-            else {
-                $at_least_one_classB_ping_is_not_zero = 1;
-                $resultB                              = 1;
-            }
+        my $resultB;
 
-            push @classA_ping, $resultB;
-        }
-
-        if ($at_least_one_classB_ping_is_not_zero) {
-            push @master_tile_data,
-              {
-                ping   => \@classA_ping,
-                subnet => $classA_subnet
-              };
+        if ( ( $pingB eq -1 ) || ( $pingB eq 0 ) ) {
+            $resultB = $pingB;
         }
         else {
-            push @master_tile_data,
-              {
-                ping   => 0,
-                subnet => $classA_subnet
-              };
+            $at_least_one_classB_ping_is_not_zero = 1;
+            $resultB                              = 1;
         }
 
-        say "$classA_subnet" if $verbose;
+        push @classA_ping, $resultB;
     }
+
+    if ($at_least_one_classB_ping_is_not_zero) {
+        push @master_tile_data,
+          {
+            ping   => \@classA_ping,
+            subnet => $classA_subnet
+          };
+    }
+    else {
+        push @master_tile_data,
+          {
+            ping   => 0,
+            subnet => $classA_subnet
+          };
+    }
+
+    say "$classA_subnet" if $verbose;
 }
 
 &jsonFile::write( $aggregated_json_file, \@master_tile_data );

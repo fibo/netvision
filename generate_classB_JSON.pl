@@ -8,7 +8,6 @@ use File::Find ();
 use lib 'lib';
 
 use classB;
-use classC;
 use dataDir;
 use jsonFile;
 use S3;
