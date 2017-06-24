@@ -48,7 +48,7 @@ for my $classA_subnet ( 0 .. 255 ) {
         my $resultB;
 
         if ( ( $pingB eq -1 ) || ( $pingB eq 0 ) ) {
-            $resultB = $pingB;
+            $resultB = 0;
         }
         else {
             $at_least_one_classB_ping_is_not_zero = 1;
